@@ -1,4 +1,5 @@
 module.exports = function() {
+  var User = require('./models/user.js');
   var express = require('express');
   var Twitter = require('twitter');
   var router = express.Router();
@@ -24,7 +25,17 @@ module.exports = function() {
           total += tweets.statuses[i].retweet_count;
         };
         
-        res.send(total.toString());
+        var player = new User({
+          name: req.query.q,
+          retweet_count: total
+        });
+        
+        player.save(function(err) {
+          if(err) throw err;
+          console.log("player saved succesfully");
+        });
+        
+        res.end();
       });
         
     });
